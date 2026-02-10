@@ -1,0 +1,35 @@
+name: Mein CI/CD Fliessband
+
+on: [push]
+
+jobs:
+  baue-und-teste:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code holen
+        uses: actions/checkout@v2
+
+      - name: Python installieren
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Werkzeuge installieren
+        run: |
+          pip install flake8 pytest
+
+      - name: Code-Qualität prüfen (Linting)
+        run: |
+          # Prüft auf Syntaxfehler
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Tests ausführen
+        run: |
+          pytest
+
+      - name: Deployment Simulation
+        if: success()
+        run: |
+          echo "✅ Tests bestanden. Starte Deployment..."
+          echo "🚀 Lade auf Server hoch..."
+          echo "🎉 Fertig!"
